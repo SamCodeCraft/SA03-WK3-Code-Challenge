@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const li = document.createElement("li");
             li.classList.add("film-item");
             li.textContent = film.title;
-            li.addEventListener("click", () => fetchAndUpdateMovieDetails(film.id));
+            li.dataset.id = film.id; // Assuming you have a data attribute "data-id" on each title with the movie ID
             filmsList.appendChild(li);
         });
     };
@@ -126,10 +126,156 @@ document.addEventListener("DOMContentLoaded", () => {
         const films = await fetchAllMovies();
         populateFilmList(films);
     };
-
+    
     // Call init function to initialize the app
     init();
+
+    // Attach event listener to movie titles
+    const movieTitles = document.querySelectorAll(".film-item");
+    movieTitles.forEach(title => {
+        title.addEventListener("click", async () => {
+            const movieId = title.dataset.id; // Assuming you have a data attribute "data-id" on each title with the movie ID
+            const movie = await fetchMovieDetails(movieId);
+            updateMovieDetails(movie);
+        });
+    });
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
