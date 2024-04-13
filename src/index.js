@@ -46,10 +46,11 @@ const populateFilmList = async () => {
         films.forEach(film => {
             const li = document.createElement("li");
             li.classList.add("film-item");
-            li.textContent = film.title;
+            li.innerHTML = `${film.title} <button id="D${film.id}">DELETE</button>`
             li.id = film.id; 
             filmsList.appendChild(li);
             displayMovies(film)
+            deleteMovie(film)
         });
     } catch (error) {
         console.error("Error populating film list:", error);
@@ -137,6 +138,14 @@ const populateFilmList = async () => {
         runtime.textContent = `${movie.runtime} Minutes`
         description.textContent = movie.description
         remainingTickets.textContent = `${movie.capacity - movie.tickets_sold}`
+        })
+    }
+    function deleteMovie(movie){
+        const deleteButton = document.getElementById(`D${movie.id}`)
+        deleteButton.addEventListener("click", () => {
+         fetch(`${baseURL}/films/${movie.id}`, {
+            method : "DELETE"
+         }).then(()=>document.getElementById(movie.id).remove())
         })
     }
 });
