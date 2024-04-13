@@ -1,5 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Base URL for API
+     const poster = document.getElementById("poster")
+     const title = document.getElementById("title")
+     const showtime = document.getElementById("showtime")
+     const runtime = document.getElementById("runtime")
+     const description = document.getElementById("film-info")
+     const remainingTickets = document.getElementById("ticket-num")
     const baseURL = "http://localhost:3000";
 
     // Function to fetch movie details by ID
@@ -30,39 +35,46 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // Function to update movie details on the UI
-    const updateMovieDetails = (movie) => {
-        const movieDetails = document.querySelector(".movie-details");
-        movieDetails.innerHTML = `
-            <img src="${movie.poster}" alt="${movie.title}">
-            <h2>${movie.title}</h2>
-            <p>Runtime: ${movie.runtime} mins</p>
-            <p>Showtime: ${movie.showtime}</p>
-            <p>Tickets Available: ${movie.capacity - movie.tickets_sold}</p>
-            <button id="buyTicketBtn">Buy Ticket</button>
-        `;
-        const buyTicketBtn = document.getElementById("buyTicketBtn");
-        buyTicketBtn.addEventListener("click", () => buyTicket(movie));
-    };
 
     // Function to populate film list
-    const populateFilmList = (films) => {
+const populateFilmList = async () => {
+    try {
+        const films = await fetchAllMovies();
+        console.log(films)
         const filmsList = document.getElementById("films");
         filmsList.innerHTML = "";
         films.forEach(film => {
             const li = document.createElement("li");
             li.classList.add("film-item");
             li.textContent = film.title;
-            li.dataset.id = film.id; // Assuming you have a data attribute "data-id" on each title with the movie ID
+            li.id = film.id; 
             filmsList.appendChild(li);
+            displayMovies(film)
         });
-    };
+    } catch (error) {
+        console.error("Error populating film list:", error);
+    }
+};
 
-    // Function to fetch and update movie details
-    const fetchAndUpdateMovieDetails = async (id) => {
-        const movie = await fetchMovieDetails(id);
-        updateMovieDetails(movie);
+    // Function to initialize the app
+    const init = async () => {
+        
+        const firstMovie = await fetchMovieDetails(1);
+        const films = await fetchAllMovies();
+        populateFilmList(films);
     };
+    
+    // Call init function to initialize the app
+    init();
+
+    // Event delegation to handle movie title clicks
+    document.getElementById("films").addEventListener("click", async (event) => {
+        if (event.target.classList.contains("film-item")) {
+            const movieId = event.target.dataset.id;
+            const movie = await fetchMovieDetails(movieId);
+            updateMovieDetails(movie);
+        }
+    });
 
     // Function to buy a ticket
     const buyTicket = async (movie) => {
@@ -116,334 +128,15 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("Error posting new ticket:", error);
         }
     };
-
-    // Function to initialize the app
-    const init = async () => {
-        // Fetch and update movie details for the first movie
-        const firstMovie = await fetchMovieDetails(1);
-        updateMovieDetails(firstMovie);
-        // Fetch and populate film list
-        const films = await fetchAllMovies();
-        populateFilmList(films);
-    };
-    
-    // Call init function to initialize the app
-    init();
-
-    // Attach event listener to movie titles
-    const movieTitles = document.querySelectorAll(".film-item");
-    movieTitles.forEach(title => {
-        title.addEventListener("click", async () => {
-            const movieId = title.dataset.id; // Assuming you have a data attribute "data-id" on each title with the movie ID
-            const movie = await fetchMovieDetails(movieId);
-            updateMovieDetails(movie);
-        });
-    });
+    function displayMovies(movie){
+        const movieSelected = document.getElementById(movie.id)
+        movieSelected.addEventListener("click", () => {
+        poster.src = movie.poster
+        title.textContent = movie.title
+        showtime.textContent = movie.showtime
+        runtime.textContent = `${movie.runtime} Minutes`
+        description.textContent = movie.description
+        remainingTickets.textContent = `${movie.capacity - movie.tickets_sold}`
+        })
+    }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
