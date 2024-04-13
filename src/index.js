@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
      const runtime = document.getElementById("runtime")
      const description = document.getElementById("film-info")
      const remainingTickets = document.getElementById("ticket-num")
-    const baseURL = "http://localhost:3000";
+    const baseURL = "https://code-challenge-json-server.onrender.com";
 
     // Function to fetch movie details by ID
     const fetchMovieDetails = async (id) => {
